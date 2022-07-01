@@ -14,4 +14,3 @@ Coding = function(Daten){
   Daten$y_means = NULL
   return(Daten)
 }
-
