@@ -7,11 +7,11 @@ Grafic = function(Daten){
   coef(metric_old)[2]
   means <- aggregate(Daten$y, list(Daten$x), FUN = mean)
   names(means)[names(means)=="x"] <- "y_means"
-  names(means)[names(means)=="Group.1"] <- "x_oc"
-  means <- means[order(means$x_oc),]
+  names(means)[names(means)=="Group.1"] <- "x"
+  means <- means[order(means$x),]
   means$k = order(seq(1, length(unique(Daten$x)),1))
   means$x_nc = (means$y_means - coef(metric_old)[1]) / coef(metric_old)[2]
-  means <- means[c("k", "x_oc", "x_nc", "y_means")]
+  means <- means[c("k", "x", "x_nc", "y_means")]
   means
   coding = means
   coding
@@ -25,8 +25,9 @@ Grafic = function(Daten){
                                      | sum(Order$test_ab) == length(Order$k), "TRUE", "FALSE")
   Ordinal_sequence_observed
 
-  Daten$y_means = ifelse(Daten$x == means$x_oc, means$y_means)
-  Daten$x_nc = (Daten$y_means - coef(metric_old)[1]) / coef(metric_old)[2]
+  Daten = merge(Daten, means, by = "x")
+  Daten$k = NULL
+  means <- rename(means, c(x = "x_oc"))
 
   plot(Daten$x_nc, Daten$y, xlab = "x-Werte", ylab = "y-Werte",
        xlim = c(min(coding$x_oc, coding$x_nc, 1) - 1, max(coding$x_oc, coding$x_nc) + 0.2),
@@ -45,7 +46,7 @@ Grafic = function(Daten){
                                   FUN = mean)[i, 2], col = i, pch = 19, cex = 2)
   }
 
-  arrows(coding$x_oc, coding$y_means, coding$x_nc, coding$y_means,
+  arrows(coding$x, coding$y_means, coding$x_nc, coding$y_means,
          length = 0.25, code = 2, lwd = 2, col = "gray30")
 
 }
