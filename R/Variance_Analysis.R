@@ -2,13 +2,14 @@ Variance_Analysis = function(Daten){
   metric_old = lm(y ~ x, data = Daten)
   means <- aggregate(Daten$y, list(Daten$x), FUN = mean)
   names(means)[names(means)=="x"] <- "y_means"
-  names(means)[names(means)=="Group.1"] <- "x_oc"
-  means <- means[order(means$x_oc),]
+  names(means)[names(means)=="Group.1"] <- "x"
+  means <- means[order(means$x),]
   means$k = order(seq(1, length(unique(Daten$x)),1))
   means$x_nc = (means$y_means - coef(metric_old)[1]) / coef(metric_old)[2]
-  means <- means[c("k", "x_oc", "x_nc", "y_means")]
-  Daten$y_means = ifelse(Daten$x == means$x_oc, means$y_means)
-  Daten$x_nc = (Daten$y_means - coef(metric_old)[1]) / coef(metric_old)[2]
+  means <- means[c("k", "x", "x_nc", "y_means")]
+  Daten = merge(Daten, means, by = "x")
+  Daten$k = NULL
+  means <- rename(means, c(x = "x_oc"))
   Daten$x = as.character(Daten$x)
   Dummy = lm(y ~ x, data = Daten)
   Daten$x = as.numeric(Daten$x)
@@ -31,10 +32,10 @@ Variance_Analysis = function(Daten){
   rownames(Variance) = c('abs. Residual SS', 'rel. Residual SS in %', 'R2', 'OMTC')
   Variance[1,1] = round(round(sum((metric_old$residuals)^2), digits = 4), digits = 4)
   Variance[1,2] = round(round(sum((metric_nc$residuals)^2), digits = 4), digits = 4)
-  Variance[1,3] = Variance[1,1] - Variance[1,2]
+  Variance[1,3] = round(Variance[1,1] - Variance[1,2], digits = 4)
   Variance[2,1] = round(100, digits = 4)
   Variance[2,2] = round(Variance[1,2] / Variance[1,1] * 100, digits = 4)
-  Variance[2,3] = Variance[2,1] - Variance[2,2]
+  Variance[2,3] = round(Variance[2,1] - Variance[2,2], digits = 4)
   Variance[3,1] = round(summary(metric_old)$r.squared, digits = 4)
   Variance[3,2] = round(summary(metric_nc)$r.squared, digits = 4)
   Variance[4,1] = round(OMTC, digits = 4)
