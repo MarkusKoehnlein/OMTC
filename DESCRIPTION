@@ -1,0 +1,10 @@
+Package: OMTC
+Type: Package
+Title: Ordinal -  Metric - Transformation - Coefficient (OMTC)
+Version: 0.1.0
+Author: Markus Koehnlein
+Maintainer: Markus Koehnlein <markus.koehnlein@web.de>
+Description: The package is used to recode ordinally scaled exogenous characteristics in linear regression models, so that the conditional mean values of the individual characteristic values represent a straight line. In this way, the same sum of squares is achieved as with the use of dummy variables. In addition, the distances between the codings can be interpreted. The package refers to the paper " Handhabung ordinalskalierter exogener Variablen in linearen Regressionsmodellen " by Markus Koehnlein (2022).
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
